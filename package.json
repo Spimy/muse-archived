@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/Spimy/muse/issues"
   },
-  "homepage": "https://github.com/Spimy/muse#readme"
+  "homepage": "https://github.com/Spimy/muse#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.1.0",
+    "discord.js": "^12.1.1",
+    "ffmpeg-static": "^4.1.1",
+    "youtube-playlist": "^1.0.2",
+    "yt-search": "^1.1.2",
+    "ytdl-core-discord": "^1.2.0"
+  }
 }
