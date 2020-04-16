@@ -6,7 +6,7 @@ module.exports.MusicHandler = class MusicHandler {
 
 	handleVideo = async (video, message, voice_channel, playlist=false) => {
 
-		let guild_queue = global_queue.get(message.guild.id);
+		let guild_queue = this.global_queue.get(message.guild.id);
 
 		if (!guild_queue) {
 
@@ -19,15 +19,15 @@ module.exports.MusicHandler = class MusicHandler {
 				playing: true
 			};
 
-			global_queue.set(message.guild.id, queueConstruct);
+			this.global_queue.set(message.guild.id, queueConstruct);
 			queueConstruct.videos.push(video);
 
 			try {
 				let connection = await voice_channel.join();
 				queueConstruct.connection = connection;
-				playVideo(message.guild, queueConstruct.videos[0])
+				this.playVideo(message.guild, queueConstruct.videos[0])
 			} catch (err) {
-				global_queue.delete(message.guild.id);
+				this.global_queue.delete(message.guild.id);
 			}
 
 		} else {
@@ -44,11 +44,11 @@ module.exports.MusicHandler = class MusicHandler {
 
 	playVideo = async (guild, video) => {
 
-		let guild_queue = global_queue.get(message.guild.id);
+		let guild_queue = this.global_queue.get(guild.id);
 
 		if (!video) {
 			guild_queue.voiceChannel.leave();
-			global_queue.delete(guild.id);
+			this.global_queue.delete(guild.id);
 			return queue.textChannel.send(`🎵 Music playback has ended.`);
 		}
 
@@ -63,7 +63,7 @@ module.exports.MusicHandler = class MusicHandler {
 		dispatcher.on("end", () => {
 			guild_queue.videos.shift();
 			setTimeout(() => {
-				playVideo(guild, guild_queue.videos[0]);
+				this.playVideo(guild, guild_queue.videos[0]);
 			}, 250);
 		});
 
@@ -73,6 +73,10 @@ module.exports.MusicHandler = class MusicHandler {
 
 		guild_queue.textChannel.send(`🎵 **${video["title"]}** is now being played`);
 
+	}
+
+	getGuildQueue = (guildID) => {
+		return this.global_queue.get(guildID);
 	}
 
 }
