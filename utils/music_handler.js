@@ -49,18 +49,19 @@ module.exports.MusicHandler = class MusicHandler {
 		if (!video) {
 			guild_queue.voiceChannel.leave();
 			this.global_queue.delete(guild.id);
-			return queue.textChannel.send(`🎵 Music playback has ended.`);
+			return guild_queue.textChannel.send(`🎵 Music playback has ended.`);
 		}
 
-		let dispatcher = guild_queue.connection.play(await ytdl(video["url"], 
+		const dispatcher = guild_queue.connection.play(await ytdl(video["url"], 
 			{ 
 				quality: "lowest"
 			}), {
 			type: "opus", 
-			bitrate: 192
+			bitrate: 150
 		});
 
-		dispatcher.on("end", () => {
+		dispatcher.on("finish", () => {
+			console.log("test")
 			guild_queue.videos.shift();
 			setTimeout(() => {
 				this.playVideo(guild, guild_queue.videos[0]);
