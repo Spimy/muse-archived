@@ -54,7 +54,7 @@ module.exports.MusicHandler = class MusicHandler {
 
 		let dispatcher = guild_queue.connection.play(await ytdl(video["url"], 
 			{ 
-				quality: 'highestaudio' 
+				quality: "lowest"
 			}), {
 			type: "opus", 
 			bitrate: 192
