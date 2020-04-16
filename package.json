@@ -1,0 +1,19 @@
+{
+  "name": "muse",
+  "version": "1.0.0",
+  "description": "A discord.js bot template already containing music functions",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Spimy/muse.git"
+  },
+  "author": "Spimy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Spimy/muse/issues"
+  },
+  "homepage": "https://github.com/Spimy/muse#readme"
+}
