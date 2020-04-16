@@ -61,7 +61,6 @@ module.exports.MusicHandler = class MusicHandler {
 		});
 
 		dispatcher.on("finish", () => {
-			console.log("test")
 			guild_queue.videos.shift();
 			setTimeout(() => {
 				this.playVideo(guild, guild_queue.videos[0]);
