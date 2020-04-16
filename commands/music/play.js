@@ -1,26 +1,31 @@
+const { music_handler } = require("../../index.js");
+
 const yts = require("yt-search");
 const ytdl = require("ytdl-core-discord");
 const ytlist = require('youtube-playlist');
 
 
-getVideoInfo = (url, message) => {
+getVideoInfo = async (url, message) => {
 
-	ytdl.getInfo(url, (err, info) => {
+	return ytdl.getInfo(url, async (err, info) => {
 
-		if (err) return console.error(err);
+		if (err) return;
 
-		let thumbnail_array_length = info["player_response"]["videoDetails"]["thumbnail"]["thumbnails"].length;
+		const videoDetails = info["player_response"]["videoDetails"];
+		const { videoId, title, thumbnail, lengthSeconds, author } = videoDetails;
+		const thumbnail_array_length = thumbnail.thumbnails.length;
 
 		let videoInfo = {
-			url: `https://www.youtube.com/watch?v=${info["player_response"]["videoDetails"]["videoId"]}`,
-			title: info["player_response"]["videoDetails"]["title"],
-			thumbnail: info["player_response"]["videoDetails"]["thumbnail"]["thumbnails"][thumbnail_array_length-1]["url"],
-			lengthSeconds: info["player_response"]["videoDetails"]["lengthSeconds"],
-			author: info["player_response"]["videoDetails"]["author"],
+			url: `https://www.youtube.com/watch?v=${videoId}`,
+			title: title,
+			thumbnail: thumbnail.thumbnails[thumbnail_array_length-1].url,
+			lengthSeconds: lengthSeconds,
+			author: author,
 			requestedBy: message.member
 		}
-
+		
 		return videoInfo;
+
 	});
 
 }
@@ -43,20 +48,30 @@ module.exports.execute = async (client, message, args) => {
 	let videoInfo;
 
 	if (video_regex.test(args[0])) {
-
-		videoInfo = getVideoInfo(args[0], message);
-
+		
+		videoInfo = await getVideoInfo(args[0], message);
+		music_handler.handleVideo(videoInfo, message, voice_channel);
 		return;
 
 	}
 
 	if (playlist_regex.test(args[0])) {
 
-		ytlist(args[0], ["name", "url"]).then(result => {
+		ytlist(args[0], ["name", "url"]).then(async result => {
 
 			for (let i=0; i<result["data"]["playlist"].length; i++) {
 				if (result["data"]["playlist"][i]["name"] == "[Deleted video]") continue;
-				videoInfo = getVideoInfo(result["data"]["playlist"][i]["url"], message);
+
+				try {
+					videoInfo = await getVideoInfo(result["data"]["playlist"][i]["url"], message);
+					if (videoInfo == undefined) continue;
+	
+					music_handler.handleVideo(videoInfo, message, voice_channel, true);
+					message.channel.send(`🎵 **Playlist** has been added to queue.`);
+					// message.channel.send(`🎵 **${playlist.title}** has been added to queue.`);
+				} catch {
+					continue;
+				}
 			}
 
 		});
@@ -74,7 +89,8 @@ module.exports.execute = async (client, message, args) => {
 		}
 
 		const videos = result.videos;
-		videoInfo = getVideoInfo(videos[0].url, message);
+		videoInfo = await getVideoInfo(videos[0].url, message);
+		music_handler.handleVideo(videoInfo, message, voice_channel);
 
 		return;
 
