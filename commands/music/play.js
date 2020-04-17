@@ -61,11 +61,13 @@ module.exports.execute = async (client, message, args) => {
 
 			message.channel.send("🔄 Processing playlist...");
 
-			for (let i=0; i<result["data"]["playlist"].length; i++) {
-				if (result["data"]["playlist"][i]["name"] == "[Deleted video]") continue;
+			let playlistInfo = result.data.playlist;
+
+			for (let i=0; i<playlistInfo.length; i++) {
+				if (playlistInfo[i].name == "[Deleted video]") continue;
 
 				try {
-					videoInfo = await getVideoInfo(result["data"]["playlist"][i]["url"], message);
+					videoInfo = await getVideoInfo(playlistInfo[i].url, message);
 					if (videoInfo == undefined) continue;
 					music_handler.handleVideo(videoInfo, message, voice_channel, true);
 				} catch {
