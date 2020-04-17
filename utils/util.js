@@ -1,7 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const ytdl = require("ytdl-core-discord");
-
 module.exports.Utils = class Utils {
 
 	constructor(client) {
@@ -64,7 +62,7 @@ module.exports.Utils = class Utils {
 
 	}
 
-	getVideoInfo = async (url, message) => {
+	getVideoInfo = async (url, ytdl, message) => {
 
 		return ytdl.getInfo(url, async (err, info) => {
 	
