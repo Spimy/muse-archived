@@ -31,9 +31,7 @@ module.exports.Utils = class Utils {
 
 	loadModules = (dir, command=false) => {
 
-		const files = this._findNested(dir, ".js");
-
-		const jsFiles = files.filter(file => file.split(".").pop() == "js");
+		const jsFiles = this._findNested(dir, ".js");
 
 		if (!command) {
 
