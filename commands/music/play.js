@@ -11,7 +11,7 @@ getVideoInfo = async (url, message) => {
 
 		if (err) return;
 
-		const videoDetails = info["player_response"]["videoDetails"];
+		const videoDetails = info.player_response.videoDetails;
 		const { videoId, title, thumbnail, lengthSeconds, author } = videoDetails;
 		const thumbnail_array_length = thumbnail.thumbnails.length;
 
@@ -59,6 +59,8 @@ module.exports.execute = async (client, message, args) => {
 
 		ytlist(args[0], ["name", "url"]).then(async result => {
 
+			message.channel.send("🔄 Processing playlist...");
+
 			for (let i=0; i<result["data"]["playlist"].length; i++) {
 				if (result["data"]["playlist"][i]["name"] == "[Deleted video]") continue;
 
@@ -67,13 +69,13 @@ module.exports.execute = async (client, message, args) => {
 					if (videoInfo == undefined) continue;
 	
 					music_handler.handleVideo(videoInfo, message, voice_channel, true);
-					message.channel.send(`🎵 **Playlist** has been added to queue.`);
-					// message.channel.send(`🎵 **${playlist.title}** has been added to queue.`);
 				} catch {
 					continue;
 				}
 			}
-
+			message.channel.send(`🎶 **Playlist** has been added to queue.`);
+			// message.channel.send(`🎵 **${playlist.title}** has been added to queue.`);
+	
 		});
 
 		return;
