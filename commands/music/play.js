@@ -67,7 +67,6 @@ module.exports.execute = async (client, message, args) => {
 				try {
 					videoInfo = await getVideoInfo(result["data"]["playlist"][i]["url"], message);
 					if (videoInfo == undefined) continue;
-	
 					music_handler.handleVideo(videoInfo, message, voice_channel, true);
 				} catch {
 					continue;
