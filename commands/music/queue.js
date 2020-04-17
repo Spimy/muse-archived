@@ -43,6 +43,8 @@ module.exports.execute = async (client, message, args) => {
 
 	let msg = await message.channel.send(embed); // Send the embed
 
+	if (num_pages <= 1) return; // If there's only 1 page, no need for reactor pagination
+
 	// Add the appropriate reaction for pagination
 	msg.react(pageBack);
 	msg.react(pageForward);
