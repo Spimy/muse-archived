@@ -13,12 +13,13 @@ module.exports.execute = async (client, message, args) => {
         if (currentVideoVotes.users.includes(message.member)) return message.reply("⚠️ You have already voted!");
 
         currentVideoVotes.num += 1; // If the user is not an admin, add 1 to vote skip
+        currentVideoVotes.users.push(message.member); // Add the user to the array meaning he already voted
+
         message.channel.send(`🎵 ${message.author}, you have voted to skip! **${currentVideoVotes.num}/3** votes`);
-        currentVideoVotes.users.push(message.member);
 
-        if (currentVideoVotes.num >= 3) return queue.connection.dispatcher.end();
+        if (currentVideoVotes.num >= 3) return queue.connection.dispatcher.end(); // 3 votes so skip the current video
 
-    } else return queue.connection.dispatcher.end();
+    } else return queue.connection.dispatcher.end(); // Skip the video without vote because of admin permission
 
 }
 
