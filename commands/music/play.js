@@ -1,36 +1,8 @@
-const { music_handler } = require("../../index.js");
+const { util, music_handler } = require("../../index.js");
 
 const yts = require("yt-search");
 const ytdl = require("ytdl-core-discord");
 const ytlist = require('youtube-playlist');
-
-
-getVideoInfo = async (url, message) => {
-
-	return ytdl.getInfo(url, async (err, info) => {
-
-		if (err) return;
-
-		const videoDetails = info.player_response.videoDetails;
-		const { videoId, title, thumbnail, lengthSeconds, author } = videoDetails;
-		const thumbnail_array_length = thumbnail.thumbnails.length;
-
-		let videoInfo = {
-			url: `https://www.youtube.com/watch?v=${videoId}`,
-			title: title,
-			thumbnail: thumbnail.thumbnails[thumbnail_array_length-1].url,
-			lengthSeconds: lengthSeconds,
-			author: author,
-			requestedBy: message.member,
-			votes: { users: [], num: 0 }
-		}
-		
-		return videoInfo;
-
-	});
-
-}
-
 
 module.exports.execute = async (client, message, args) => {
 
@@ -49,7 +21,7 @@ module.exports.execute = async (client, message, args) => {
 	let videoInfo;
 
 	if (video_regex.test(args[0])) {
-		videoInfo = await getVideoInfo(args[0], message);
+		videoInfo = await util.getVideoInfo(args[0], message);
 		music_handler.handleVideo(videoInfo, message, voice_channel);
 		return;
 	}
@@ -66,7 +38,7 @@ module.exports.execute = async (client, message, args) => {
 				if (playlistInfo[i].name == "[Deleted video]") continue;
 
 				try {
-					videoInfo = await getVideoInfo(playlistInfo[i].url, message);
+					videoInfo = await util.getVideoInfo(playlistInfo[i].url, message);
 					if (videoInfo == undefined) continue;
 					music_handler.handleVideo(videoInfo, message, voice_channel, true);
 				} catch {
@@ -91,7 +63,7 @@ module.exports.execute = async (client, message, args) => {
 		}
 
 		const videos = result.videos;
-		videoInfo = await getVideoInfo(videos[0].url, message);
+		videoInfo = await util.getVideoInfo(videos[0].url, message);
 		music_handler.handleVideo(videoInfo, message, voice_channel);
 
 		return;
