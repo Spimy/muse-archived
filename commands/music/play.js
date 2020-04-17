@@ -21,7 +21,8 @@ getVideoInfo = async (url, message) => {
 			thumbnail: thumbnail.thumbnails[thumbnail_array_length-1].url,
 			lengthSeconds: lengthSeconds,
 			author: author,
-			requestedBy: message.member
+			requestedBy: message.member,
+			votes: { users: [], num: 0 }
 		}
 		
 		return videoInfo;
@@ -48,11 +49,9 @@ module.exports.execute = async (client, message, args) => {
 	let videoInfo;
 
 	if (video_regex.test(args[0])) {
-		
 		videoInfo = await getVideoInfo(args[0], message);
 		music_handler.handleVideo(videoInfo, message, voice_channel);
 		return;
-
 	}
 
 	if (playlist_regex.test(args[0])) {
