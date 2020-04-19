@@ -7,12 +7,12 @@ module.exports.execute = async (client, message, args) => {
 	if (!queue) return message.reply("⚠️ There is currently no music playing!"); // Tell the user no song is being played
 
 	// Set the emojis for pagination
-	const pageBack = "◀️";
-	const pageForward = "▶️";
+	const pageBack = "⏪";
+	const pageForward = "⏩";
 
 	const num_per_page = 5; // Number of songs to show in a page
-	let queuedVideos = queue.videos.slice(); // Make a copy of the queue by value
-	let pageContents = []; // This array will contain arrays with length of number of songs to show in a page
+	const queuedVideos = queue.videos.slice(); // Make a copy of the queue by value
+	const pageContents = []; // This array will contain arrays with length of number of songs to show in a page
 	
 	// Separate songs into different arrays to get number of pages perfectly
 	while (queuedVideos.length > 0) {
@@ -29,11 +29,11 @@ module.exports.execute = async (client, message, args) => {
 	// A long mess of a description. I have no idea how to
 	// make it look the same and improve the code at the same time
 	let description = `${pageContents[currentPage].map((video, index) => 
-		`**${currentListNum+(index+1)} - ** [${video.title}](${video.url})`).join('\n')}\n\n`;
+		`**[${currentListNum+(index+1)}]:** [${video.title}](${video.url})`).join('\n')}\n\n`;
 	description += `🎵 **Currently Playing:** [${queue.videos[0].title}](${queue.videos[0].url})`;
 
 	// Initial embed
-	let embed = new discord.MessageEmbed()
+	const embed = new discord.MessageEmbed()
 		.setTitle(title)
 		.setColor('RANDOM')
 		.setThumbnail(queue.videos[0].thumbnail)
@@ -41,7 +41,7 @@ module.exports.execute = async (client, message, args) => {
 		.setFooter(`Page ${currentPage+1} of ${num_pages} | Requested by ${message.author.tag}`)
 		.setTimestamp();
 
-	let msg = await message.channel.send(embed); // Send the embed
+	const msg = await message.channel.send(embed); // Send the embed
 
 	if (num_pages <= 1) return; // If there's only 1 page, no need for reactor pagination
 
@@ -56,37 +56,33 @@ module.exports.execute = async (client, message, args) => {
 	// Detect reactions
 	collector.on("collect", (reaction, user) => {
 
-		if (!user.bot) {
+		if (user.bot) return;
 
-			switch (reaction.emoji.name) {
-				case pageBack: {
-					reaction.users.remove(user);
-					currentPage = currentPage == 0 ? pageContents.length - 1 : currentPage -= 1;
-					break;
-				}
-
-				case pageForward: {
-					reaction.users.remove(user);
-					currentPage = currentPage == pageContents.length - 1 ? 0 : currentPage += 1;
-					break;
-				}
+		switch (reaction.emoji.name) {
+			case pageBack: {
+				currentPage = currentPage == 0 ? pageContents.length - 1 : currentPage -= 1;
+				break;
 			}
 
-			currentListNum = ((currentPage + 1) * num_per_page) - num_per_page;
-
-			// Set the description again with the new contents
-			description = `${pageContents[currentPage].map((video, index) => 
-				`**${currentListNum+(index+1)} - ** [${video.title}](${video.url})`).join('\n')}\n\n`;
-			description += `🎵 **Currently Playing:** [${queue.videos[0].title}](${queue.videos[0].url})`;
-
-			embed.setDescription(description);
-			embed.setFooter(`Page ${currentPage+1} of ${num_pages} | Requested by ${message.author.tag}`);
-
-			msg.edit(embed);
-
+			case pageForward: {
+				currentPage = currentPage == pageContents.length - 1 ? 0 : currentPage += 1;
+				break;
+			}
 		}
-		
 
+		reaction.users.remove(user);
+		currentListNum = ((currentPage + 1) * num_per_page) - num_per_page;
+
+		// Set the description again with the new contents
+		description = `${pageContents[currentPage].map((video, index) => 
+			`**[${currentListNum+(index+1)}]: ** [${video.title}](${video.url})`).join('\n')}\n\n`;
+		description += `🎵 **Currently Playing:** [${queue.videos[0].title}](${queue.videos[0].url})`;
+
+		embed.setDescription(description);
+		embed.setFooter(`Page ${currentPage+1} of ${num_pages} | Requested by ${message.author.tag}`);
+
+		msg.edit(embed);
+		
 	});
 
 }
