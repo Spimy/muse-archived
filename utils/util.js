@@ -61,32 +61,6 @@ module.exports.Utils = class Utils {
 
 	}
 
-	getVideoInfo = async (url, ytdl, message) => {
-
-		return ytdl.getInfo(url, async (err, info) => {
-	
-			if (err) return;
-	
-			const videoDetails = info.player_response.videoDetails;
-			const { videoId, title, thumbnail, lengthSeconds, author } = videoDetails;
-			const thumbnail_array_length = thumbnail.thumbnails.length;
-	
-			let videoInfo = {
-				url: `https://www.youtube.com/watch?v=${videoId}`,
-				title: title,
-				thumbnail: thumbnail.thumbnails[thumbnail_array_length-1].url,
-				lengthSeconds: lengthSeconds,
-				author: author,
-				requestedBy: message.member,
-				votes: { users: [], num: 0 }
-			}
-			
-			return videoInfo;
-	
-		});
-	
-	}
-
 	loadCommand = (command, autoReload=true) => {
 		
 		if (!autoReload) {

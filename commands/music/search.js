@@ -1,5 +1,5 @@
 const discord = require("discord.js");
-const { util, music_handler } = require("../../index.js");
+const { music_handler } = require("../../index.js");
 
 const yts = require("yt-search");
 const ytdl = require("ytdl-core-discord");
@@ -23,7 +23,7 @@ module.exports.execute = async (client, message, args) => {
 	let videoInfo;
 
 	if (video_regex.test(args[0])) {
-		videoInfo = await util.getVideoInfo(args[0], ytdl, message);
+		videoInfo = await music_handler.getVideoInfo(args[0], ytdl, message);
 		music_handler.handleVideo(videoInfo, message, voice_channel);
 		return;
 	}
@@ -39,7 +39,7 @@ module.exports.execute = async (client, message, args) => {
 				if (playlistInfo[i].name == "[Deleted video]") continue;
 
 				try {
-					videoInfo = await util.getVideoInfo(playlistInfo[i].url, ytdl, message);
+					videoInfo = await music_handler.getVideoInfo(playlistInfo[i].url, ytdl, message);
 					if (videoInfo == undefined) continue;
 					music_handler.handleVideo(videoInfo, message, voice_channel, true);
 				} catch {
@@ -82,7 +82,7 @@ module.exports.execute = async (client, message, args) => {
 		}).then(async response => {
 
 			const videoIndex = parseInt(response.first().content) - 1;
-			videoInfo = await util.getVideoInfo(videos[videoIndex].url, ytdl, message);
+			videoInfo = await music_handler.getVideoInfo(videos[videoIndex].url, ytdl, message);
 			music_handler.handleVideo(videoInfo, message, voice_channel);
 
 			msg.delete();
