@@ -2,25 +2,20 @@ const discord = require("discord.js");
 const { util, music_handler } = require("../../index.js");
 
 
-ReplaceAt = (str, index, replacement) => {
-    return str.substr(0, index) + replacement + str.substr(index + replacement.length);
-}
-
-formatSeconds = (seconds) => {
-    return new Date(seconds * 1000).toISOString().substr(11, 8)
-}
-
 module.exports.execute = async (client, message, args) => {
 
     let queue = music_handler.getGuildQueue(message.guild.id); // Get the queue for the guild the cmd was executed in
     if (!queue) return message.reply("⚠️ There is currently no music playing!"); // Tell the user no song is being played
     if (!queue.connection) return message.reply("⚠️ Video has not started playing as audio yet!");
-    
+
     // Get the information of the current video
-    const vidLength = queue.videos[0].lengthSeconds;
-    const vidTitle = queue.videos[0].title;
-    const vidUrl = queue.videos[0].url;
-    const vidRequester = queue.videos[0].requestedBy;
+    const currentVideo = queue.videos[0];
+    const vidLength = currentVideo.lengthSeconds;
+    const vidTitle = currentVideo.title;
+    const vidUrl = currentVideo.url;
+    const vidAuthor = currentVideo.author;
+    const vidAuthorUrl = currentVideo.authorUrl;
+    const vidRequester = currentVideo.requestedBy;
 
     const vidDurationCount = 33;
     const lengthBar = "━".repeat(vidDurationCount);
@@ -28,23 +23,25 @@ module.exports.execute = async (client, message, args) => {
 
     // Get time information to edit on to the embed's timeline and whether there's a video in the queue
     let timePosition = Math.floor(((queue.connection.dispatcher.streamTime / 1000) / vidLength) * vidDurationCount);
-    let timeString = `${formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${formatSeconds(vidLength)}`
-    let timeRemaining = formatSeconds(vidLength - (queue.connection.dispatcher.streamTime / 1000));
+    let timeString = `${util.formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${util.formatSeconds(vidLength)}`
+    let timeRemaining = util.formatSeconds(vidLength - (queue.connection.dispatcher.streamTime / 1000));
     let vidNext = queue.videos.length > 1 ? queue.videos[1].title : "None";
 
-    // Set the duration bar of the embed
+    // Set the duration bar on the embed
     let description = `[${vidTitle}](${vidUrl})\n`;
-    description += `\`\`\`${ReplaceAt(lengthBar, timePosition, timeIndicator)} ${timeString}\`\`\``;
+    description += `\`\`\`${util.replaceStrChar(lengthBar, timePosition, timeIndicator)} ${timeString}\`\`\``;
 
+    // Initial embed
     const embed = new discord.MessageEmbed()
         .setColor("RANDOM")
         .setTitle("Now Playing:")
-        .setThumbnail(queue.videos[0].thumbnail)
+        .setThumbnail(currentVideo.thumbnail)
         .setDescription(description)
         .addFields(
-            { name: "Duration:", value: formatSeconds(vidLength), inline:true },
+            { name: "Duration:", value: util.formatSeconds(vidLength), inline:true },
             { name: "Remaining Time:", value: timeRemaining, inline: true },
             { name: "Requested By:", value: vidRequester.user.tag, inline: true },
+            { name: "Uploaded By:", value: `[${vidAuthor}](${vidAuthorUrl})`, inline: true },
             { name: "Up Next:", value: vidNext, inline: true }
         )
         .setTimestamp();
@@ -59,18 +56,18 @@ module.exports.execute = async (client, message, args) => {
             queue = music_handler.getGuildQueue(message.guild.id);
 
             // Get new time information to edit on to the embed's timeline and whether there's a new video in the queue
-            timeString = `${formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${formatSeconds(vidLength)}`
+            timeString = `${util.formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${util.formatSeconds(vidLength)}`
             timePosition = Math.floor(((queue.connection.dispatcher.streamTime / 1000) / vidLength) * vidDurationCount);
-            timeRemaining = formatSeconds(vidLength - (queue.connection.dispatcher.streamTime / 1000));
+            timeRemaining = util.formatSeconds(vidLength - (queue.connection.dispatcher.streamTime / 1000));
             vidNext = queue.videos.length > 1 ? queue.videos[1].title : "None";
 
-            // Set the duration bar of the embed
+            // Set the duration bar on the embed
             description = `[${vidTitle}](${vidUrl})\n`;
-            description += `\`\`\`${ReplaceAt(lengthBar, timePosition, timeIndicator)} ${timeString}\`\`\``;
+            description += `\`\`\`${util.replaceStrChar(lengthBar, timePosition, timeIndicator)} ${timeString}\`\`\``;
             
             embed.setDescription(description);
             embed.spliceFields(1, 1, { name: "Remaining Time:", value: timeRemaining, inline: true });
-            embed.spliceFields(3, 1, { name: "Up Next:", value: vidNext, inline: true });
+            embed.spliceFields(4, 1, { name: "Up Next:", value: vidNext, inline: true });
             msg.edit(embed);
 
         } catch {
@@ -86,7 +83,7 @@ module.exports.execute = async (client, message, args) => {
     // Check if the song has ended and set the embed to say the song has ended
     queue.connection.dispatcher.on("finish", () => {
         description = `[${vidTitle}](${vidUrl})\n`;
-        description += `\`\`\`${ReplaceAt(lengthBar, vidDurationCount-1, timeIndicator)} Ended\`\`\``;
+        description += `\`\`\`${util.replaceStrChar(lengthBar, vidDurationCount-1, timeIndicator)} Ended\`\`\``;
 
         embed.setTitle("Was Playing:");
         embed.setDescription(description);
