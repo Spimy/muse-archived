@@ -30,9 +30,8 @@ module.exports.execute = async (client, message, args) => {
 
 		ytlist(args[0], ["name", "url"]).then(async result => {
 
-			message.channel.send("🔄 Processing playlist...");
-
-			let playlistInfo = result.data.playlist;
+			const msg = await message.channel.send("🔄 Processing playlist...");
+			const playlistInfo = result.data.playlist;
 
 			for (let i=0; i<playlistInfo.length; i++) {
 				if (playlistInfo[i].name == "[Deleted video]") continue;
@@ -46,6 +45,7 @@ module.exports.execute = async (client, message, args) => {
 				}
 			}
 			message.channel.send(`🎶 **Playlist** has been added to queue.`);
+			msg.delete();
 			// message.channel.send(`🎵 **${playlist.title}** has been added to queue.`);
 	
 		});
