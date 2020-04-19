@@ -2,6 +2,11 @@ const { util } = require("../../index.js");
 
 module.exports.execute = async (client, message, args) => {
 
+    if (!message.member.hasPermission("ADMINISTRATOR")) {
+        message.reply("⚠️ You do not have the permissions to run this command! You require `ADMINISTRATOR` permissions");
+        return;
+    }
+
     if (!args[0]) return message.reply("⚠️ Specify a command to load!");
     const cmd = args[0].toLowerCase();
     const res = util.loadCommand(cmd, false);
