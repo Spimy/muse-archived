@@ -22,7 +22,7 @@ module.exports.execute = async (client, message, args) => {
     queue.connection.dispatcher.setVolumeLogarithmic(args[0] / 100);
 
     volumeEmoji = queue.volume > 50 ? "🔊" : (queue.volume <= 0 ? "🔈" : "🔉"); // Check audio loudness for correct emoji
-    message.channel.send(`${volumeEmoji} has now been set to **${queue.volume}/100**`); // Tell the user volume has changed
+    message.channel.send(`${volumeEmoji} Volume has now been set to **${queue.volume}/100**`); // Tell the user volume has changed
 
 }
 
