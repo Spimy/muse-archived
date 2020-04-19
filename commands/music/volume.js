@@ -28,5 +28,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "volume",
-    aliases: ["vol"]
+    aliases: ["vol"],
+    category: "Music",
+    usage: "[volume]",
+    description: "The volume is too loud? Or is it too quiet? Change it using this command! Alternatively, view the current volume!"
 }

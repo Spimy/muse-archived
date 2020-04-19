@@ -44,6 +44,7 @@ module.exports.execute = async (client, message, args) => {
             { name: "Uploaded By:", value: `[${vidAuthor}](${vidAuthorUrl})`, inline: true },
             { name: "Up Next:", value: vidNext, inline: true }
         )
+        .setFooter(`Requested by ${message.author.tag}`)
         .setTimestamp();
 
     const msg = await message.channel.send(embed);
@@ -98,5 +99,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "nowplaying",
-    aliases: ["np", "now_playing", "current", "currentlyplaying", "currently_playing"]
+    aliases: ["np", "now_playing", "current", "currentlyplaying", "currently_playing"],
+    category: "Music",
+    usage: "",
+    description: "View the currently playing song with a fancy duration bar"
 }

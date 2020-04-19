@@ -75,5 +75,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
 	name: "play",
-	aliases: []
+	aliases: [],
+	category: "Music",
+    usage: "<YouTube Url / Search Query>",
+    description: "Bored? How about playing some music from youtube! Be sure to be in a voice channel before running this command!"
 }

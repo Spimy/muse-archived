@@ -34,5 +34,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "reload",
-    aliases: ["rl"]
+    aliases: ["rl"],
+    category: "Admin",
+    usage: "<command>",
+    description: "Did you make changes to a command? Reload it without restarting the me!"
 }

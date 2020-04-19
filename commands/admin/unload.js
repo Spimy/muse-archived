@@ -34,5 +34,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "unload",
-    aliases: ["unloadcmd"]
+    aliases: ["unloadcmd"],
+    category: "Admin",
+    usage: "<command>",
+    description: "Perhaps you no longer need this command? You can unload the command so it can no longer be used!"
 }

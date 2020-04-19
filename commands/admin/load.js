@@ -34,5 +34,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "load",
-    aliases: ["loadcmd"]
+    aliases: ["loadcmd"],
+    category: "Admin",
+    usage: "<command>",
+    description: "You just added a command but music is playing? Load it with me so you don't have to abruptly stop the music!"
 }

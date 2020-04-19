@@ -12,5 +12,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "stop",
-    aliases: ["end", "leave"]
+    aliases: ["end", "leave"],
+    category: "Music",
+    usage: "",
+    description: "Tired of musics? I don't think anyone would ever say that! But if you truly are then stop the music playback using this command!"
 }

@@ -25,5 +25,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "skip",
-    aliases: []
+    aliases: [],
+    category: "Music",
+    usage: "",
+    description: "Don't like the current music? Skip it! No-one enjoys horrible musics!"
 }

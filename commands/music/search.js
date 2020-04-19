@@ -102,5 +102,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
 	name: "search",
-	aliases: []
+	aliases: [],
+	category: "Music",
+    usage: "<YouTube Url / Search Query>",
+    description: "Same as play command but search query allows you to select which video you want."
 }

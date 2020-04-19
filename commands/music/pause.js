@@ -18,5 +18,8 @@ module.exports.execute = async (client, message, args) => {
 
 module.exports.help = {
     name: "pause",
-    aliases: []
+    aliases: [],
+    category: "Music",
+    usage: "",
+    description: "Busy and don't want to miss a music? Pause it! I'll wait till you come back!"
 }
