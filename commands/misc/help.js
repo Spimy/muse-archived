@@ -17,8 +17,13 @@ module.exports.execute = async (client, message, args) => {
             if (!command) return message.reply("⚠️ Specified command does not exist!");
 
             const commandInfo = command.help;
+            const aliasesPresent = commandInfo.aliases.length > 0;
+            
             embed.setTitle(`${commandInfo.name.toUpperCase()} COMMAND`)
-            embed.setDescription(`${commandInfo.description}\n\nUsage: \`${config.prefix}${commandInfo.name} ${commandInfo.usage}\`\nAliases: ${commandInfo.aliases.length > 0 ? commandInfo.aliases.map(alias => `\`${alias}\``).join(", ") : "\`None\`"}`);
+            embed.setDescription(`${commandInfo.description}\n\n\
+            Usage: \`${config.prefix}${commandInfo.name} ${commandInfo.usage}\`\n\
+            Aliases: ${aliasesPresent ? commandInfo.aliases.map(alias => `\`${alias}\``).join(", ") : "\`None\`"}`);
+            
             message.channel.send(embed);
             break;
         }
@@ -29,7 +34,8 @@ module.exports.execute = async (client, message, args) => {
             const categories = [];
 
             embed.setTitle("-= COMMAND LIST =-")
-            embed.setDescription(`**Prefix:** \`${config.prefix}\`\n<> : Required | [] : Optional\nUse \`${config.prefix}${helpCommand.name} ${helpCommand.usage}\` to view command help with more detail.`)
+            embed.setDescription(`**Prefix:** \`${config.prefix}\`\n<> : Required | [] : Optional\
+            \nUse \`${config.prefix}${helpCommand.name} ${helpCommand.usage}\` to view command help with more detail.`)
         
             commands.forEach(command => {
                 if (!categories.includes(command.help.category)) categories.push(command.help.category);
