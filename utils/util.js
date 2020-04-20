@@ -34,30 +34,25 @@ module.exports.Utils = class Utils {
 
 		const jsFiles = this._findNested(this.project_folder + dir, ".js");
 
-		if (!command) {
+		if (jsFiles.length <= 0) return console.log(`There are no ${command ? "commands" : "files"} to load.`);
 
-			if (jsFiles.length <= 0) return console.log(`There are no files to load.`);
+		console.log(`Loading ${jsFiles.length} ${command ? "command" : "file"}${jsFiles.length <= 1 ? "" : "s"}...`);
+		jsFiles.forEach(file => {
+			const pull = require(file);
 
-			console.log(`Loading ${jsFiles.length} file${jsFiles.length <= 1 ? "" : "s"}...`);
-			jsFiles.forEach(file => {
-				require(file);
-			});
+			if (command) {
+				if (this.client.commands.get(pull.help.name)) console.warn(`CONFLICT: Duplicate commands found: ${pull.help.name}`);
+				else this.client.commands.set(pull.help.name, pull);
 
-		} else {
+				if (pull.help.aliases && typeof pull.help.aliases == "object") {
+					pull.help.aliases.forEach(alias => {
+						if (this.client.aliases.get(alias)) console.warn(`CONFLICT: Duplicate aliases found: ${alias}`);
+						else this.client.aliases.set(alias, pull.help.name);
+					});
+				}
+			}
 
-			if (jsFiles.length <= 0) return console.log("There are no commands to load.");
-
-			console.log(`Loading ${jsFiles.length} command file${jsFiles.length <= 1 ? "" : "s"}...`);
-			jsFiles.forEach(file => {
-				const cmd = require(file);
-				this.client.commands.set(cmd.help.name, cmd);
-
-				cmd.help.aliases.forEach(alias => {
-					this.client.aliases.set(alias, cmd.help.name);
-				});
-
-			});
-		}
+		});
 
 	}
 
