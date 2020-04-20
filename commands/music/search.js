@@ -11,49 +11,17 @@ module.exports.execute = async (client, message, args) => {
 	const voice_channel = message.member.voice.channel;
 	if (!voice_channel) return message.reply("⚠️ Join a voice channel!");
 
-	const video_regex = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-	const playlist_regex = /^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/;
+	const url_regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
-	if (args.length <= 0) return message.reply("⚠️ Please input a YouTube URL or a search query!");
+	if (args.length <= 0) return client.commands.get("help").execute(client, message, ["search"]);
 
 	const perms = voice_channel.permissionsFor(message.client.user);
 	if (!perms.has("CONNECT")) return message.reply("⚠️ I do not have permissions to connect to voice channels!");
 	if (!perms.has("SPEAK")) return message.reply("⚠️ I do not have permissions to speak in voice channels!");
 
-	let videoInfo;
-
-	if (video_regex.test(args[0])) {
-		videoInfo = await music_handler.getVideoInfo(args[0], ytdl, message);
-		music_handler.handleVideo(videoInfo, message, voice_channel);
-		return;
-	}
-
-	if (playlist_regex.test(args[0])) {
-
-		ytlist(args[0], ["name", "url"]).then(async result => {
-
-			const msg = await message.channel.send("🔄 Processing playlist...");
-			const playlistInfo = result.data.playlist;
-
-			for (let i=0; i<playlistInfo.length; i++) {
-				if (playlistInfo[i].name == "[Deleted video]") continue;
-
-				try {
-					videoInfo = await music_handler.getVideoInfo(playlistInfo[i].url, ytdl, message);
-					if (videoInfo == undefined) continue;
-					music_handler.handleVideo(videoInfo, message, voice_channel, true);
-				} catch {
-					continue;
-				}
-			}
-			message.channel.send(`🎶 **Playlist** has been added to queue.`);
-			msg.delete();
-			// message.channel.send(`🎵 **${playlist.title}** has been added to queue.`);
-	
-		});
-
-		return;
-
+	// If the video is a URL then process it using the play command instead of copying the whole play command
+	if (url_regex.test(args[0].toLowerCase())) {
+		return client.commands.get("play").execute(client, message, args, true);
 	}
 
 	yts(args.join(" "), async (err, result) => {
@@ -82,7 +50,7 @@ module.exports.execute = async (client, message, args) => {
 		}).then(async response => {
 
 			const videoIndex = parseInt(response.first().content) - 1;
-			videoInfo = await music_handler.getVideoInfo(videos[videoIndex].url, ytdl, message);
+			const videoInfo = await music_handler.getVideoInfo(videos[videoIndex].url, ytdl, message);
 			music_handler.handleVideo(videoInfo, message, voice_channel);
 
 			msg.delete();
