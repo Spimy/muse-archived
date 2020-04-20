@@ -14,8 +14,8 @@ module.exports.execute = async (client, message, args) => {
     }
 
     // Make sure the inputs are numbers and, between 0 and 100 only
-    if (isNaN(args[0])) return message.reply("⚠️ please input a volume between 0 and 100!");
-    if (args[0] < 0 || args[0] > 100) return message.reply("⚠️ please input a volume between 0 and 100!");
+    if (isNaN(args[0])) return client.commands.get("help").execute(client, message, ["volume"]);
+    if (args[0] < 0 || args[0] > 100) return client.commands.get("help").execute(client, message, ["volume"]);
 
     // Set the volume
     queue.volume = args[0];
@@ -30,6 +30,6 @@ module.exports.help = {
     name: "volume",
     aliases: ["vol"],
     category: "Music",
-    usage: "[volume]",
+    usage: "[volume (0-100)]",
     description: "The volume is too loud? Or is it too quiet? Change it using this command! Alternatively, view the current volume!"
 }

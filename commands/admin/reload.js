@@ -7,7 +7,7 @@ module.exports.execute = async (client, message, args) => {
         return;
     }
 
-    if (!args[0]) return message.reply("⚠️ Specify a command to reload!");
+    if (!args[0]) return client.commands.get("help").execute(client, message, ["reload"]);
     const cmd = args[0].toLowerCase();
     const res = util.reloadCommand(cmd);
 
