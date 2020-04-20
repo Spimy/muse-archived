@@ -33,7 +33,7 @@ module.exports.execute = async (client, message, args) => {
     }
 
     const command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
-    if (!command) return message.reply("⚠️ Specified command does not exist!");
+    if (!command) return this.execute(client, message, []);
 
     const commandInfo = command.help;
     const aliasesPresent = commandInfo.aliases.length > 0;
