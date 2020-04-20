@@ -58,6 +58,7 @@ module.exports.execute = async (client, message, args) => {
 
 		}).catch((err) => {
 			if (err) undefined;
+			msg.delete();
 			return message.reply("⚠ You have exceeded the 10 seconds selection time!");
 		});
 
