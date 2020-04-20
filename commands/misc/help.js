@@ -9,55 +9,42 @@ module.exports.execute = async (client, message, args) => {
         .setThumbnail(client.user.avatarURL(client.user))
         .setFooter(`Requested by ${message.author.tag}`)
         .setTimestamp();
-                    
-    switch (args.length) {
 
-        case 1: {
-            const command = client.commands.get(args[0]);
-            if (!command) return message.reply("⚠️ Specified command does not exist!");
+    if (!args[0]) {
 
-            const commandInfo = command.help;
-            const aliasesPresent = commandInfo.aliases.length > 0;
-            
-            embed.setTitle(`${commandInfo.name.toUpperCase()} COMMAND`)
-            embed.setDescription(`${commandInfo.description}\n\n\
-            Usage: \`${config.prefix}${commandInfo.name} ${commandInfo.usage}\`\n\
-            Aliases: ${aliasesPresent ? commandInfo.aliases.map(alias => `\`${alias}\``).join(", ") : "\`None\`"}`);
-            
-            message.channel.send(embed);
-            break;
+        const categories = [...new Set(client.commands.map(command => command.help.category))];
+    
+        embed.setTitle("-= COMMAND LIST =-");
+        embed.setDescription([
+            `**Prefix:** \`${config.prefix}\``,
+            `<> : Required | [] : Optional`,
+            `Use \`${config.prefix}${helpCommand.name} ${helpCommand.usage}\` to view command help with more detail.`
+        ].join("\n"));
+    
+        let categorisedCommands;
+    
+        for (const category of categories) {
+            categorisedCommands = client.commands.filter(cmd => cmd.help.category == category);
+            embed.addField(category, categorisedCommands.map(cmd => `\`${cmd.help.name}\``).join(", "));
         }
-
-        default: {
-
-            const commands = Array.from(client.commands.values());
-            const categories = [];
-
-            embed.setTitle("-= COMMAND LIST =-")
-            embed.setDescription(`**Prefix:** \`${config.prefix}\`\n<> : Required | [] : Optional\
-            \nUse \`${config.prefix}${helpCommand.name} ${helpCommand.usage}\` to view command help with more detail.`)
-        
-            commands.forEach(command => {
-                if (!categories.includes(command.help.category)) categories.push(command.help.category);
-            });
-        
-            let categorisedCommands = [];
-        
-            categories.forEach(category => {
-                commands.forEach(command => {
-                    if (command.help.category == category) categorisedCommands.push(command.help.name);
-                });
-                embed.addField(category, `${categorisedCommands.map(cmd => `\`${cmd}\``).join(", ")}`);
-                categorisedCommands = [];
-            });
-        
-            message.channel.send(embed);
-            break;
-        }
-
+    
+        message.channel.send(embed);
+        return;
     }
 
+    const command = client.commands.get(args[0]);
+    if (!command) return message.reply("⚠️ Specified command does not exist!");
+
+    const commandInfo = command.help;
+    const aliasesPresent = commandInfo.aliases.length > 0;
     
+    embed.setTitle(`${commandInfo.name.toUpperCase()} COMMAND`);
+    embed.setDescription(commandInfo.description);
+    embed.addField("Usage", `\`${config.prefix}${commandInfo.name}${commandInfo.usage != "" ? ` ${commandInfo.usage}` : ""}\``);
+    embed.addField("Aliases", `${aliasesPresent ? commandInfo.aliases.map(alias => `\`${alias}\``).join(", ") : "\`None\`"}`);
+
+    message.channel.send(embed);
+
 }
 
 module.exports.help = {
