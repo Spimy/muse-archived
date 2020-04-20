@@ -61,10 +61,16 @@ module.exports.MusicHandler = class MusicHandler {
 
 		dispatcher.on("finish", () => {
 
-			// Make this check to avoid errors when playback is stopped abrutply using stop command
-			if (guild_queue.videos.length > 0) {
-				if (!guild_queue.videos[0].loop && !guild_queue.loop) guild_queue.videos.shift();
-				if (!guild_queue.videos[0].loop && guild_queue.loop) guild_queue.videos.push(guild_queue.videos.shift());
+			// Try/Catch in case of any error that arises .loop of undefined
+			// The playback will end if it happens
+			try {
+				// Make this check to avoid errors when playback is stopped abrutply using stop command
+				if (guild_queue.videos.length > 0) {
+					if (!guild_queue.videos[0].loop && !guild_queue.loop) guild_queue.videos.shift();
+					if (!guild_queue.videos[0].loop && guild_queue.loop) guild_queue.videos.push(guild_queue.videos.shift());
+				}
+			} catch (err) {
+				if (err) undefined;
 			}
 
 			setTimeout(() => {
