@@ -25,6 +25,9 @@ Extract the downloaded files into your C: drive and set up your `PATH` environme
 `bin` folder. Once you have done this, close and reopen your command line if you already have it
 opened and run `ffmpeg -version` to check if it has been properly installed.
 
+Watch [Linux Leech's Video](https://www.youtube.com/watch?v=qjtmgCb8NcE) if you still need help
+installing FFmpeg.
+
 ## Development Installation
 
 - Fork this repo
