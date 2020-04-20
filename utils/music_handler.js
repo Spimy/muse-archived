@@ -16,19 +16,18 @@ module.exports.MusicHandler = class MusicHandler {
 				connection: null,
 				videos: [],
 				volume: 50,
-				playing: true
+				playing: true,
+				loop: false
 			};
 
 			this.global_queue.set(message.guild.id, queueConstruct);
 			queueConstruct.videos.push(video);
 
-			try {
-				let connection = await voice_channel.join();
+			voice_channel.join().then(connection => {
 				queueConstruct.connection = connection;
 				this.playVideo(message.guild, queueConstruct.videos[0])
-			} catch (err) {
-				this.global_queue.delete(message.guild.id);
-			}
+			}).catch(err => this.global_queue.delete(message.guild.id));
+
 
 		} else {
 
@@ -61,7 +60,13 @@ module.exports.MusicHandler = class MusicHandler {
 		});
 
 		dispatcher.on("finish", () => {
-			guild_queue.videos.shift();
+
+			// Make this check to avoid errors when playback is stopped abrutply using stop command
+			if (guild_queue.videos.length > 0) {
+				if (!guild_queue.videos[0].loop && !guild_queue.loop) guild_queue.videos.shift();
+				if (!guild_queue.videos[0].loop && guild_queue.loop) guild_queue.videos.push(guild_queue.videos.shift());
+			}
+
 			setTimeout(() => {
 				this.playVideo(guild, guild_queue.videos[0]);
 			}, 250);
@@ -93,7 +98,8 @@ module.exports.MusicHandler = class MusicHandler {
 				author: author,
 				authorUrl: `https://www.youtube.com/channel/${channelId}`,
 				requestedBy: message.member,
-				votes: { users: [], num: 0 }
+				votes: { users: [], num: 0 },
+				loop: false
 			}
 			
 			return videoInfo;
