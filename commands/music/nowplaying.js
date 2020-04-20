@@ -26,7 +26,7 @@ module.exports.execute = async (client, message, args) => {
     let timePosition = Math.floor(((queue.connection.dispatcher.streamTime / 1000) / vidLength) * vidDurationCount);
     let timeString = `${util.formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${util.formatSeconds(vidLength)}`
     let timeRemaining = util.formatSeconds(vidLength - (queue.connection.dispatcher.streamTime / 1000));
-    let vidNext = queue.videos.length > 1 ? queue.videos[1].title : "None";
+    let vidNext = queue.videos.length > 1 ? `[${queue.videos[1].title}](${queue.videos[1].url})` : "None";
 
     // Set the duration bar on the embed
     let description = `[${vidTitle}](${vidUrl})\n`;
@@ -62,7 +62,7 @@ module.exports.execute = async (client, message, args) => {
             timeString = `${util.formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${util.formatSeconds(vidLength)}`
             timePosition = Math.floor(((queue.connection.dispatcher.streamTime / 1000) / vidLength) * vidDurationCount);
             timeRemaining = util.formatSeconds(vidLength - (queue.connection.dispatcher.streamTime / 1000));
-            vidNext = queue.videos.length > 1 ? queue.videos[1].title : "None";
+            vidNext = queue.videos.length > 1 ? `[${queue.videos[1].title}](${queue.videos[1].url})` : "None";
 
             // Set the duration bar on the embed
             description = `[${vidTitle}](${vidUrl})\n`;
