@@ -32,7 +32,7 @@ module.exports.execute = async (client, message, args) => {
         return;
     }
 
-    const command = client.commands.get(args[0]);
+    const command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
     if (!command) return message.reply("⚠️ Specified command does not exist!");
 
     const commandInfo = command.help;
