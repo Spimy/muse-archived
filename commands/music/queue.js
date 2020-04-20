@@ -11,15 +11,15 @@ module.exports.execute = async (client, message, args) => {
 	const pageForward = "⏩";
 
 	const num_per_page = 5; // Number of songs to show in a page
-	const queuedVideos = queue.videos.slice(); // Make a copy of the queue by value
-	const pageContents = []; // This array will contain arrays with length of number of songs to show in a page
+	let queuedVideos = queue.videos.slice(); // Make a copy of the queue by value
+	let pageContents = []; // This array will contain arrays with length of number of songs to show in a page
 	
 	// Separate songs into different arrays to get number of pages perfectly
 	while (queuedVideos.length > 0) {
 		pageContents.push(queuedVideos.splice(0, num_per_page))
 	}
 
-	const num_pages = pageContents.length; // The number of pages is the number of arrays in the pageContent arrays
+	let num_pages = pageContents.length; // The number of pages is the number of arrays in the pageContent arrays
 	let currentPage = 0; // Page starts at 0 because array index starts at 0
 	let currentListNum = ((currentPage + 1) * num_per_page) - num_per_page; // Calculate the last item's position in a page
 
@@ -28,7 +28,7 @@ module.exports.execute = async (client, message, args) => {
 
 	// A long mess of a description. I have no idea how to
 	// make it look the same and improve the code at the same time
-	let description = `${pageContents[currentPage].map((video, index) => 
+	let description = `Looping queue: ${queue.loop}\n\n${pageContents[currentPage].map((video, index) => 
 		`**[${currentListNum+(index+1)}]:** [${video.title}](${video.url})`).join('\n')}\n\n`;
 	description += `🎵 **Currently Playing:** [${queue.videos[0].title}](${queue.videos[0].url})`;
 
@@ -58,6 +58,17 @@ module.exports.execute = async (client, message, args) => {
 
 		if (user.bot) return;
 
+		// To keep the list up to date with currently playing if the song shifted
+		queuedVideos = queue.videos.slice();
+		pageContents = [];
+	
+		// Separate songs into different arrays to get number of pages perfectly
+		while (queuedVideos.length > 0) {
+			pageContents.push(queuedVideos.splice(0, num_per_page))
+		}
+
+		num_pages = pageContents.length;
+
 		switch (reaction.emoji.name) {
 			case pageBack: {
 				currentPage = currentPage == 0 ? pageContents.length - 1 : currentPage -= 1;
@@ -71,10 +82,11 @@ module.exports.execute = async (client, message, args) => {
 		}
 
 		reaction.users.remove(user);
+		
 		currentListNum = ((currentPage + 1) * num_per_page) - num_per_page;
 
 		// Set the description again with the new contents
-		description = `${pageContents[currentPage].map((video, index) => 
+		description = `Looping queue: ${queue.loop}\n\n${pageContents[currentPage].map((video, index) => 
 			`**[${currentListNum+(index+1)}]: ** [${video.title}](${video.url})`).join('\n')}\n\n`;
 		description += `🎵 **Currently Playing:** [${queue.videos[0].title}](${queue.videos[0].url})`;
 
