@@ -54,28 +54,27 @@ module.exports.MusicHandler = class MusicHandler {
 		const dispatcher = guild_queue.connection.play(await ytdl(video["url"], 
 			{ 
 				quality: "lowest"
-			}), {
+			}).catch(err => console.error(err)), {
 			type: "opus", 
 			bitrate: 150
 		});
 
 		dispatcher.on("finish", () => {
 
-			// Try/Catch in case of any error that arises .loop of undefined
-			// The playback will end if it happens
-			try {
-				// Make this check to avoid errors when playback is stopped abrutply using stop command
+			const currentVideo = guild_queue.videos[0];
+
+			// If there is no current video means stop command was run or issues with playback occurred
+			if (currentVideo) {
 				if (guild_queue.videos.length > 0) {
-					if (!guild_queue.videos[0].loop && !guild_queue.loop) guild_queue.videos.shift();
-					if (!guild_queue.videos[0].loop && guild_queue.loop) guild_queue.videos.push(guild_queue.videos.shift());
+					if (!currentVideo.loop && !guild_queue.loop) guild_queue.videos.shift();
+					if (!currentVideo.loop && guild_queue.loop) guild_queue.videos.push(guild_queue.videos.shift());
 				}
-			} catch (err) {
-				if (err) undefined;
 			}
 
 			setTimeout(() => {
 				this.playVideo(guild, guild_queue.videos[0]);
 			}, 250);
+
 		});
 
 		dispatcher.on("error", err => console.error(err));
