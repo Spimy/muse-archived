@@ -7,10 +7,23 @@ You can add to this bot by writing your own commands code and putting in the com
 
 ## Requirements
 
+- NodeJS
+- FFmpeg
+
+### NodeJS
+
 You are required to have NodeJS installed.\
 If you do not have NodeJS installed, download it at <https://nodejs.org/> and run the installer.
+Once installed, open your command line and run `node -v` to check if it has been properly installed.
 
-Once installed, open your command line and run `node -v` to check if has been properly installed.
+### FFmpeg
+
+You are required to have FFmpeg installed on your machine to play music.\
+If you do not have FFmpeg installed, download it at <https://www.ffmpeg.org/>.
+
+Extract the downloaded files into your C: drive and set up your `PATH` environment variable to the
+`bin` folder. Once you have done this, close and reopen your command line if you already have it
+opened and run `ffmpeg -version` to check if it has been properly installed.
 
 ## Development Installation
 
