@@ -13,6 +13,7 @@ module.exports.execute = async (client, message, args) => {
     const vidLength = currentVideo.lengthSeconds;
     const vidTitle = currentVideo.title;
     const vidUrl = currentVideo.url;
+    const vidLoop = currentVideo.loop;
     const vidAuthor = currentVideo.author;
     const vidAuthorUrl = currentVideo.authorUrl;
     const vidRequester = currentVideo.requestedBy;
@@ -40,6 +41,7 @@ module.exports.execute = async (client, message, args) => {
         .addFields(
             { name: "Duration:", value: util.formatSeconds(vidLength), inline:true },
             { name: "Remaining Time:", value: timeRemaining, inline: true },
+            { name: "Looping:", value: vidLoop, inline: true},
             { name: "Requested By:", value: vidRequester.user.tag, inline: true },
             { name: "Uploaded By:", value: `[${vidAuthor}](${vidAuthorUrl})`, inline: true },
             { name: "Up Next:", value: vidNext, inline: true }
@@ -68,7 +70,8 @@ module.exports.execute = async (client, message, args) => {
             
             embed.setDescription(description);
             embed.spliceFields(1, 1, { name: "Remaining Time:", value: timeRemaining, inline: true });
-            embed.spliceFields(4, 1, { name: "Up Next:", value: vidNext, inline: true });
+            embed.spliceFields(2, 1, { name: "Looping:", value: vidLoop, inline: true });
+            embed.spliceFields(5, 1, { name: "Up Next:", value: vidNext, inline: true });
             msg.edit(embed);
 
         } catch {
