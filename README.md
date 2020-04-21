@@ -9,6 +9,47 @@ You can add to this bot by writing your own commands code and putting in the com
 the error comes from YTDL and I am not responsible for any issues related to said library. If any issues of the like
 persists, open an issue on their [GitHub page](https://github.com/amishshah/ytdl-core-discord/issues/).
 
+## Features
+
+- Multiple Ways to Start Music:
+    1. Play with YouTube video links (also supports YouTube playlist links):\
+    ![Method 1](assets/features/play_command/method_1.png)
+
+    1. Play with search query:\
+    ![Method 2](assets/features/play_command/method_2.png)
+
+    1. Play using search command to make a selection from 10 results:\
+    ![Method 3](assets/features/play_command/method_3.png)
+
+- Video and Queue Loop:\
+    You can make a video or a queue loop.
+
+    If video is looping, it will never jump to the next video unless you turn if off or skip the song\
+    If queue is looping, the entire queue will never end. This is done by pushing the first video to the
+    end of the queue array when it finishes playing
+
+    ![Loop command](assets/features/loop_command.png)
+
+- Vote Skip if not Admin:\
+    ![Skip command](assets/features/skip_command.png)
+
+- Paginated Queue Embed:\
+    Each page contains up to 5 videos so you need at least 6 videos in the queue for pagination to start\
+    The reactor for pagination lasts for 60 seconds. If 60 seconds have passed, rerun the `queue` command for
+    pagination to work again\
+    ![Queue embed](assets/features/queue_embed.gif)
+
+- Duration Bar:\
+    Updates every 5 seconds to avoid rate limit\
+    Shows when `nowplaying` or `resume` command is executed\
+    ![Duration bar](assets/features/duration_bar.gif)
+
+- Clear Whole Queue or Video at Specified Index:\
+    ![Clear queue](assets/features/clear_command.png)
+
+- Responsive Help Message:\
+    ![Help message](assets/features/help_message.png)
+
 ## Requirements
 
 - NodeJS
