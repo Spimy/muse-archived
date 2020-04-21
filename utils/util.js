@@ -47,6 +47,7 @@ module.exports.Utils = class Utils {
 				if (pull.help.aliases && typeof pull.help.aliases == "object") {
 					pull.help.aliases.forEach(alias => {
 						if (this.client.aliases.get(alias)) console.warn(`CONFLICT: Duplicate aliases found: ${alias}`);
+						else if (this.client.commands.get(alias)) console.warn(`CONFLICT: Alias clases with command name: ${alias}`)
 						else this.client.aliases.set(alias, pull.help.name);
 					});
 				}
