@@ -51,7 +51,7 @@ module.exports.execute = async (client, message, args) => {
 
 			const videoIndex = parseInt(response.first().content) - 1;
 			const videoInfo = await music_handler.getVideoInfo(videos[videoIndex].url, ytdl, message);
-			music_handler.handleVideo(videoInfo, message, voice_channel);
+			music_handler.handleVideo(videoInfo, message, voice_channel, ytdl);
 
 			msg.delete();
 			response.first().delete();

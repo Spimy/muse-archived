@@ -25,7 +25,7 @@ module.exports.execute = async (client, message, args, fromSearch=false) => {
 
 		if (video_regex.test(args[0].toLowerCase())) {
 			videoInfo = await music_handler.getVideoInfo(args[0], ytdl, message);
-			music_handler.handleVideo(videoInfo, message, voice_channel);
+			music_handler.handleVideo(videoInfo, message, voice_channel, ytdl);
 			return;
 		}
 	
@@ -42,7 +42,7 @@ module.exports.execute = async (client, message, args, fromSearch=false) => {
 					try {
 						videoInfo = await music_handler.getVideoInfo(playlistInfo[i].url, ytdl, message);
 						if (videoInfo == undefined) continue;
-						music_handler.handleVideo(videoInfo, message, voice_channel, true);
+						music_handler.handleVideo(videoInfo, message, voice_channel, ytdl, true);
 					} catch {
 						continue;
 					}
@@ -73,7 +73,7 @@ module.exports.execute = async (client, message, args, fromSearch=false) => {
 	
 			const videos = result.videos;
 			videoInfo = await music_handler.getVideoInfo(videos[0].url, ytdl, message);
-			music_handler.handleVideo(videoInfo, message, voice_channel);
+			music_handler.handleVideo(videoInfo, message, voice_channel, ytdl);
 	
 			return;
 	
