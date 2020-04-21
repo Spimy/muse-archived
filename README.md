@@ -28,14 +28,13 @@ opened and run `ffmpeg -version` to check if it has been properly installed.
 Watch [Linux Leech's Video](https://www.youtube.com/watch?v=qjtmgCb8NcE) if you still need help
 installing FFmpeg.
 
-## Development Installation
+## Installation Instructions
 
 - Fork this repo
 - Clone your fork to your local machine
-- CD into the bots root directory
+- CD into the bot's root directory
 - Run `npm install`
-- Copy your [discord token](#getting-a-discord-bot-token) into [config.json](config.json)
-- Set a command prefix in [config.json](config.json)
+- Copy your [discord token](#getting-a-discord-bot-token) and set a command prefix in into [config.json](config.json)
 - Run `npm start` or `node index.js`
 
 ## Getting a Discord Bot Token
@@ -62,7 +61,7 @@ The way I did it in my code:
 
 ```js
 module.exports.execute = async (client, message, args) => {
-    // Commad code in here
+    // Command code in here
 }
 
 module.exports.help = {
@@ -80,7 +79,7 @@ Alternative:
 module.exports = {
 
     execute: async (client, message, args) => {
-        // Commad code in here
+        // Command code in here
     },
 
     help: {
