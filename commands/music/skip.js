@@ -18,11 +18,25 @@ module.exports.execute = async (client, message, args) => {
         message.channel.send(`🎵 ${message.author}, you have voted to skip! **${currentVideoVotes.num}/3** votes`);
 
         if (queue.videos[0].loop) queue.videos[0].loop = false; // If video loops, turn it off
+
+        // Resume the dispatcher if the song is paused to skip a song even when paused
+        if (!queue.playing) {
+            queue.playing = true;
+            queue.connection.dispatcher.resume();
+        }
+
         if (currentVideoVotes.num >= 3) return queue.connection.dispatcher.end(); // 3 votes so skip the current video
 
     } else {
         // Skip the video without vote because of admin permission
         if (queue.videos[0].loop) queue.videos[0].loop = false; // If video loops, turn it off
+
+        // Resume the dispatcher if the song is paused to skip a song even when paused
+        if (!queue.playing) {
+            queue.playing = true;
+            queue.connection.dispatcher.resume();
+        }
+        
         return queue.connection.dispatcher.end();
     }
 }
