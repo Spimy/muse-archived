@@ -1,10 +1,14 @@
-const ytdl = require("ytdl-core-discord");
-
 module.exports.MusicHandler = class MusicHandler {
+
+	constructor(discord, util) {
+		this.discord = discord;
+		this.util = util;
+		this.embed = new discord.MessageEmbed();
+	}
 	
 	global_queue = new Map();
 
-	handleVideo = async (video, message, voice_channel, playlist=false) => {
+	handleVideo = async (video, message, voice_channel, ytdl, playlist=false) => {
 
 		let guild_queue = this.global_queue.get(message.guild.id);
 
@@ -25,7 +29,7 @@ module.exports.MusicHandler = class MusicHandler {
 
 			voice_channel.join().then(connection => {
 				queueConstruct.connection = connection;
-				this.playVideo(message.guild, queueConstruct.videos[0])
+				this.playVideo(message.guild, queueConstruct.videos[0], ytdl)
 			}).catch(err => this.global_queue.delete(message.guild.id));
 
 
@@ -33,7 +37,19 @@ module.exports.MusicHandler = class MusicHandler {
 
 			guild_queue.videos.push(video);
 			if (playlist) return;
-			return message.channel.send(`🎵 **${video["title"]}** has been added to queue.`);
+
+			const addedVideoIndex = guild_queue.videos.indexOf(video);
+			this.embed
+				.setColor("RANDOM")
+				.setTitle("Added Video to Queue")
+				.setDescription(`\`\`\`${video.title}\`\`\``)
+				.setThumbnail(video.thumbnail)
+				.addField("Position:", `${addedVideoIndex == 1 ? "Up Next" : addedVideoIndex+1}`, true)
+				.addField("Requested By:", video.requestedBy.user.tag, true)
+				.setTimestamp();
+
+			message.channel.send(this.embed);
+			return this.embed.spliceFields(0, this.embed.fields.length);
 
 		}
 
@@ -41,7 +57,7 @@ module.exports.MusicHandler = class MusicHandler {
 
 	}
 
-	playVideo = async (guild, video) => {
+	playVideo = async (guild, video, ytdl) => {
 
 		let guild_queue = this.global_queue.get(guild.id);
 
@@ -51,7 +67,7 @@ module.exports.MusicHandler = class MusicHandler {
 			return guild_queue.textChannel.send(`🎵 Music playback has ended.`);
 		}
 
-		const dispatcher = guild_queue.connection.play(await ytdl(video["url"], 
+		const dispatcher = guild_queue.connection.play(await ytdl(video.url, 
 			{ 
 				quality: "lowest"
 			}).catch(err => console.error(err)), {
@@ -72,7 +88,7 @@ module.exports.MusicHandler = class MusicHandler {
 			}
 
 			setTimeout(() => {
-				this.playVideo(guild, guild_queue.videos[0]);
+				this.playVideo(guild, guild_queue.videos[0], ytdl);
 			}, 250);
 
 		});
@@ -81,7 +97,17 @@ module.exports.MusicHandler = class MusicHandler {
 
 		dispatcher.setVolumeLogarithmic(guild_queue.volume / 100);
 
-		guild_queue.textChannel.send(`🎵 **${video["title"]}** is now being played`);
+		this.embed
+			.setColor("RANDOM")
+			.setTitle("Now Playing:")
+			.setDescription(`[${video.title}](${video.url})`)
+			.setThumbnail(video.thumbnail)
+			.addField("Duration:", `${this.util.formatSeconds(video.lengthSeconds)}`, true)
+			.addField("Requested By:", video.requestedBy.user.tag, true)
+			.setTimestamp();
+
+		guild_queue.textChannel.send(this.embed);
+		this.embed.spliceFields(0, this.embed.fields.length);
 
 	}
 

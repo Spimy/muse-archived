@@ -6,7 +6,7 @@ const mh = require("./utils/music_handler.js");
 
 const client = new discord.Client();
 const util = new utils.Utils(client, process.cwd());
-const music_handler = new mh.MusicHandler();
+const music_handler = new mh.MusicHandler(discord, util);
 module.exports = { client, config, util, music_handler };
 
 client.commands = new discord.Collection();
