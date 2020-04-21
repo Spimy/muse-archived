@@ -1,4 +1,5 @@
-const { music_handler } = require("../../index.js");
+const discord = require("discord.js");
+const { util, music_handler } = require("../../index.js");
 
 module.exports.execute = async (client, message, args) => {
 
@@ -7,9 +8,30 @@ module.exports.execute = async (client, message, args) => {
 
     // If music is playing then pause the music
     if (queue.playing) {
+
+        const currentVid = queue.videos[0];
+        const vidLength = currentVid.lengthSeconds;
+
+        const vidDurationCount = 33;
+        const lengthBar = "━".repeat(vidDurationCount);
+        const timeIndicator = "⚪";
+
+        const timePosition = Math.floor(((queue.connection.dispatcher.streamTime / 1000) / vidLength) * vidDurationCount);
+        const timeString = `${util.formatSeconds(queue.connection.dispatcher.streamTime / 1000)} / ${util.formatSeconds(vidLength)}`
+
+        const embed = new discord.MessageEmbed()
+            .setColor("RANDOM")
+            .setTitle("Successfully Paused")
+            .setDescription([
+                `⏸️ [${currentVid.title}](${currentVid.url}) has been paused`,
+                `\`\`\`${util.replaceStrChar(lengthBar, timePosition, timeIndicator)} ${timeString}\`\`\``
+            ].join("\n"))
+            .setFooter(`Requested by ${message.author.tag}`)
+            .setTimestamp()
+
         queue.playing = false;
         queue.connection.dispatcher.pause();
-        return message.channel.send("⏸️ Music has now been paused");
+        return message.channel.send(embed);
     }
 
     return message.reply("⚠️ Music is already paused!")
