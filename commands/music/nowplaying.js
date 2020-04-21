@@ -70,7 +70,7 @@ module.exports.execute = async (client, message, args) => {
             
             embed.setDescription(description);
             embed.spliceFields(1, 1, { name: "Remaining Time:", value: timeRemaining, inline: true });
-            embed.spliceFields(2, 1, { name: "Looping:", value: vidLoop, inline: true });
+            embed.spliceFields(2, 1, { name: "Looping:", value: queue.videos[0].loop, inline: true });
             embed.spliceFields(5, 1, { name: "Up Next:", value: vidNext, inline: true });
             msg.edit(embed);
 
