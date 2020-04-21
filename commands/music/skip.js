@@ -47,5 +47,5 @@ module.exports.help = {
     category: "Music",
     usage: "",
     description: "Don't like the current music? Skip it! No-one enjoys horrible musics!\n\
-    Requires 3 votes if user is not admin!\nNote: same user cannot more than once."
+    Requires 3 votes if user is not admin!\nNote: same user cannot vote more than once."
 }
