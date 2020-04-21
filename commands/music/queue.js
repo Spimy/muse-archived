@@ -24,7 +24,7 @@ module.exports.execute = async (client, message, args) => {
 	let currentListNum = ((currentPage + 1) * num_per_page) - num_per_page; // Calculate the last item's position in a page
 
 	// Set the title of the embed
-	const title = queue.videos.length > 1 ? `Upcoming - Next ${queue.videos.length}` : "Currently Playing";
+	let title = queue.videos.length > 1 ? `Upcoming - Next ${queue.videos.length}` : "Currently Playing";
 
 	// A long mess of a description. I have no idea how to
 	// make it look the same and improve the code at the same time
@@ -61,7 +61,10 @@ module.exports.execute = async (client, message, args) => {
 		// To keep the list up to date with currently playing if the song shifted
 		queuedVideos = queue.videos.slice();
 		pageContents = [];
-	
+		
+		// Set title again in case song was removed from queue
+		title = queuedVideos.length > 1 ? `Upcoming - Next ${queuedVideos.length}` : "Currently Playing";
+
 		// Separate songs into different arrays to get number of pages perfectly
 		while (queuedVideos.length > 0) {
 			pageContents.push(queuedVideos.splice(0, num_per_page))
@@ -90,6 +93,7 @@ module.exports.execute = async (client, message, args) => {
 			`**[${currentListNum+(index+1)}]: ** [${video.title}](${video.url})`).join('\n')}\n\n`;
 		description += `🎵 **Currently Playing:** [${queue.videos[0].title}](${queue.videos[0].url})`;
 
+		embed.setTitle(title);
 		embed.setDescription(description);
 		embed.setFooter(`Page ${currentPage+1} of ${num_pages} | Requested by ${message.author.tag}`);
 
