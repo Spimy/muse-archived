@@ -5,6 +5,10 @@
 A discord.js bot template already containing music functions\
 You can add to this bot by writing your own commands code and putting in the commands folder
 
+**NOTICE:** If the bot crashes or song randomly gets skipped with errors similar to `Error: Too many redirects` then
+the error comes from YTDL and I am not responsible for any issues related to said library. If any issues of the like
+persists, open an issue on their [GitHub page](https://github.com/amishshah/ytdl-core-discord/issues/).
+
 ## Requirements
 
 - NodeJS
