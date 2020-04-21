@@ -46,5 +46,6 @@ module.exports.help = {
     aliases: [],
     category: "Music",
     usage: "",
-    description: "Don't like the current music? Skip it! No-one enjoys horrible musics!"
+    description: "Don't like the current music? Skip it! No-one enjoys horrible musics!\n\
+    Requires 3 votes if user is not admin!\nNote: same user cannot more than once."
 }
