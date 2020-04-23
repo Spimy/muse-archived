@@ -21,7 +21,8 @@ module.exports.MusicHandler = class MusicHandler {
 				videos: [],
 				volume: 50,
 				playing: true,
-				loop: false
+				loop: false,
+				stopped: false
 			};
 
 			this.global_queue.set(message.guild.id, queueConstruct);

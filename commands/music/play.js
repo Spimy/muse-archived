@@ -32,21 +32,35 @@ module.exports.execute = async (client, message, args, fromSearch=false) => {
 		if (playlist_regex.test(args[0].toLowerCase())) {
 	
 			ytlist(args[0], ["name", "url"]).then(async result => {
-	
+				
+				// Declared the variable here so that the loop does create multiple instances of the same variable
+				// Basically use less memory
+				let queue;
+
 				const msg = await message.channel.send("🔄 Processing playlist...");
 				const playlistInfo = result.data.playlist;
 	
 				for (let i=0; i<playlistInfo.length; i++) {
+
+					// Load the queue to check for update in the queue
+					queue = music_handler.getGuildQueue(message.guild.id);
+					
 					if (playlistInfo[i].name == "[Deleted video]") continue;
-	
+					
 					try {
 						videoInfo = await music_handler.getVideoInfo(playlistInfo[i].url, ytdl, message);
 						if (videoInfo == undefined) continue;
+
+						// Check if there's a queue first to avoid errors (for first video being processed)
+						// If the stop command has been executed then stop adding videos to the queue by doing nothing
+						if (queue && queue.stopped) return;
+
 						music_handler.handleVideo(videoInfo, message, voice_channel, ytdl, true);
 					} catch {
 						continue;
 					}
 				}
+				
 				message.channel.send(`🎶 **Playlist** has been added to queue.`);
 				msg.delete();
 				// message.channel.send(`🎵 **${playlist.title}** has been added to queue.`);
