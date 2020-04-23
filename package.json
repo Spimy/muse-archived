@@ -1,6 +1,6 @@
 {
   "name": "muse",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "A discord.js bot template already containing music functions",
   "main": "index.js",
   "scripts": {
