@@ -14,7 +14,9 @@ module.exports.execute = async (client, message, args) => {
     if (!["song", "queue"].includes(args[0])) return client.commands.get("help").execute(client, message, ["loop"]);
     if (!["true", "false"].includes(args[1])) return client.commands.get("help").execute(client, message, ["loop"]);
 
-    const boolean = args[1] === "true";
+    // If not boolean then send help message
+    const boolean = args[1] == "true" ? true : (args[1] == "false" ? false : args[1]);
+    if (typeof boolean != "boolean") return client.commands.get("help").execute(client, message, ["loop"]);
 
     switch (args[0]) {
         case "song": {
