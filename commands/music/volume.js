@@ -5,6 +5,10 @@ module.exports.execute = async (client, message, args) => {
     const queue = music_handler.getGuildQueue(message.guild.id); // Get the queue for the guild the cmd was executed in
     if (!queue) return message.reply("⚠️ There is currently no music playing!"); // Tell the user no song is being played
 
+    if (!message.member.voice.channel || message.member.voice.channel != queue.voiceChannel) {
+        return message.reply("⚠️ You must be in the same voice channel as me to use this command!")
+    }
+    
     let volumeEmoji; // Declare the variable to use the correct emoji so it doesn't have to be declared more than once
 
     if (!args[0]) {

@@ -8,6 +8,10 @@ module.exports.execute = async (client, message, args) => {
     if (!queue) return message.reply("⚠️ There is currently no music playing!"); // Tell the user no song is being played
     if (!queue.connection) return message.reply("⚠️ Video has not started playing as audio yet!");
 
+    if (!message.member.voice.channel || message.member.voice.channel != queue.voiceChannel) {
+        return message.reply("⚠️ You must be in the same voice channel as me to use this command!")
+    }
+
     // Get the information of the current video
     const currentVideo = queue.videos[0];
     const vidLength = currentVideo.lengthSeconds;
