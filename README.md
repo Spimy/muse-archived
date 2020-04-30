@@ -18,7 +18,8 @@ persists, open an issue on their [GitHub page](https://github.com/amishshah/ytdl
 
 You are required to have NodeJS installed.\
 If you do not have NodeJS installed, download it at <https://nodejs.org/> and run the installer.
-Once installed, open your command line and run `node -v` to check if it has been properly installed.
+Once installed, open your command line and run `node -v` to check if it has been properly installed.\
+You must be running at least V12 of NodeJS!
 
 ### FFmpeg
 
