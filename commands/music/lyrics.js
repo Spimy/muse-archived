@@ -78,6 +78,7 @@ module.exports.execute = async (client, message, args) => {
 module.exports.help = {
     name: "lyrics",
     aliases: [],
+    category: "Music",
     description: "Want to sing along with a song playing? Find the lyrics of that song! If `np` option cannot find\
                 lyrics then try to manually type in the title of the song!",
     usage: "<np | search query>"
