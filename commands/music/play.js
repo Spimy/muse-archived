@@ -7,7 +7,7 @@ const ytlist = require('youtube-playlist');
 module.exports.execute = async (client, message, args, fromSearch=false) => {
 
 	const voice_channel = message.member.voice.channel;
-	if (!voice_channel) return message.reply("⚠️ Join a voice channel!");
+	if (!voice_channel) return client.commands.get("help").execute(client, message, ["play"]);
 
 	const url_regex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 	const video_regex = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
