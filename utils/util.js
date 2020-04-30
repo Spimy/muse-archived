@@ -32,7 +32,7 @@ module.exports.Utils = class Utils {
 
 	loadModules = (dir, command=false) => {
 
-		const jsFiles = this._findNested(this.project_folder + dir, ".js");
+		const jsFiles = this._findNested(this.project_folder + `${path.sep}${dir}${path.sep}`, ".js");
 
 		if (jsFiles.length <= 0) return console.log(`There are no ${command ? "commands" : "files"} to load.`);
 
