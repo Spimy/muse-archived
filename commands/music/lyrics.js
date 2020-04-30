@@ -18,7 +18,7 @@ const scrapeLyrics = path => {
 };
 
 const searchLyrics = url => {
-    return Promise.resolve(axios.get(url, {"Authorization": `Bearer ${config.GENIUS}`})
+    return Promise.resolve(axios.get(url, {"Authorization": `Bearer ${config.geniusToken}`})
         .then(response => checkSpotify(response.data.response.hits))
         .then(path => [path, scrapeLyrics(path)])
         .catch(console.error)
