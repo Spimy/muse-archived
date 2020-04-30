@@ -42,5 +42,5 @@ module.exports.help = {
     usage: "[index]",
     description: "Accidentally added a playlist or song? Clear the queue completely or remove a song at a specific index!\
             Clearing the first index would initiate a song skip. If you are an admin, it will skip. If not then it'll\
-            require 3 votes to skip!"
+            require votes to skip!"
 }
