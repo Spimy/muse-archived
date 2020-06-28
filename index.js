@@ -15,7 +15,4 @@ client.aliases = new discord.Collection();
 util.loadModules("events");
 util.loadModules("commands", true);
 
-
-/*  Change to client.login(process.env.TOKEN)
-    and set the TOKEN as an environment variable in .env  */
 client.login(config.token);
