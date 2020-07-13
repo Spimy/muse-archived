@@ -1,5 +1,7 @@
 # Muse (μ's)
 
+**THIS PROJECT HAS BEEN ABANDONED** Please check out [MuseCLI](https://github.com/Spimy/muse-cli) instead! Download using `npm install -g muse-cli`
+
 ![Muse Logo Image](assets/logo.png)\
 [![Discord Users Online](https://discordapp.com/api/guilds/422469294786347016/widget.png?style=shield)](https://discord.gg/865tNC4)\
 A discord.js bot template already containing music functions\
